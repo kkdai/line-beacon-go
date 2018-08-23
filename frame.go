@@ -9,18 +9,18 @@ var (
 )
 
 var (
-	frameTypeData       byte = 0x02
-	hwidData            []byte
+	frameTypeData byte = 0x02
+	// hwidData            []byte
 	measuredTxPowerData byte = 0x7F
-	deviceMessageData   []byte
+	// deviceMessageData   []byte
 )
 
 func getBeaconFrame(hwid, msgData []byte) []byte {
 	var ret []byte
 	ret = append(ret, frameTypeData)
-	ret = append(ret, hwidData...)
+	ret = append(ret, hwid...)
 	ret = append(ret, measuredTxPowerData)
-	ret = append(ret, deviceMessageData...)
+	ret = append(ret, msgData...)
 	return ret
 }
 
