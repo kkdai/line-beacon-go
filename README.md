@@ -4,6 +4,23 @@ LINE Simple Beacon is a specification for beacon hardware for LINE Bot developer
 
 [Spec in English from Line](https://github.com/line/line-simple-beacon/blob/master/README.en.md)
 
+## Install it in MacOSX
+
+`go install github.com/kkdai/line-beacon-go/tools/macosx`
+
+## How to use it
+
+```go
+
+import lineBeacon "github.com/kkdai/line-beacon-go"
+
+hwID := []byte{0x01, 0x02, ...}
+msgData := []byte{0x01, 0x02, ...}
+
+totalFrameData := lineBeacon.CreateLineSimpleBeaconAdvertisingPDU(hwID, msgData)
+fmt.Println("Your Line Beacon frame raw data:", totalFrameData)
+```
+
 ## Tools
 
 WIP
