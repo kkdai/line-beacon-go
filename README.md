@@ -4,7 +4,7 @@ LINE Simple Beacon is a specification for beacon hardware for LINE Bot developer
 
 [Spec in English from Line](https://github.com/line/line-simple-beacon/blob/master/README.en.md)
 
-## Install it in MacOSX
+## Install in MacOSX (WIP)
 
 `go install github.com/kkdai/line-beacon-go/tools/macosx`
 
@@ -28,3 +28,7 @@ WIP
 ## Inspire by Line Simple Beacon
 
 [Repo](https://github.com/line/line-simple-beacon)
+
+## Disclaimer
+
+This is WIP libray and I still don't get realone line-beacon on hand, but it fullfil the testing case in Line Simple Beacon
