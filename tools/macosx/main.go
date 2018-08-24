@@ -23,7 +23,7 @@ func main() {
 
 	msgData, err := hex.DecodeString(msg)
 	if err != nil {
-		log.Println("HW ID is not valid, err:", err)
+		log.Println("Msg data is not valid, err:", err)
 	}
 
 	beacon := lineBeacon.NewLineBeacon(hwID, msgData)
