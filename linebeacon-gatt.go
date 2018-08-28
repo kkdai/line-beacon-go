@@ -6,7 +6,6 @@ import (
 
 	"github.com/paypal/gatt"
 	"github.com/paypal/gatt/examples/option"
-	"github.com/suapapa/go_eddystone"
 )
 
 const (
@@ -41,8 +40,8 @@ func NewLineBeacon(hwid []byte, data []byte) *LineBeaconGATT {
 func (eb *LineBeaconGATT) Advertise() {
 	a := &gatt.AdvPacket{}
 	a.AppendFlags(advFlagGeneralDiscoverable | advFlagLEOnly)
-	a.AppendField(advTypeAllUUID16, eddystone.SvcUUIDBytes)
-	a.AppendField(advTypeServiceData16, append(eddystone.SvcUUIDBytes, eb.OutFrame...))
+	a.AppendField(advTypeAllUUID16, UUID16LE_FOR_LINECORP)
+	a.AppendField(advTypeServiceData16, eb.OutFrame)
 
 	fmt.Println(a.Len(), a)
 

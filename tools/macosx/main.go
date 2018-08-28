@@ -27,6 +27,6 @@ func main() {
 	}
 
 	beacon := lineBeacon.NewLineBeacon(hwID, msgData)
-	fmt.Println("Your Line Beacon frame raw data:", beacon.OutFrame)
+	fmt.Println("Your Line Beacon frame raw data:", hex.EncodeToString(beacon.OutFrame))
 	beacon.Advertise()
 }
