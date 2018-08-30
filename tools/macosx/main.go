@@ -12,8 +12,8 @@ import (
 func main() {
 	var hwid string
 	var msg string
-	flag.StringVar(&hwid, "h", "0.0.0.0", "Hardward ID")
-	flag.StringVar(&msg, "m", "50051", "Message")
+	flag.StringVar(&hwid, "h", "a1b2c3d4e5", "Hardward ID")
+	flag.StringVar(&msg, "m", "00", "Message")
 	flag.Parse()
 
 	hwID, err := hex.DecodeString(hwid)
