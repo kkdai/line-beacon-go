@@ -1,11 +1,12 @@
 package linebeacon
 
 import (
-	"fmt"
+	"context"
 	"log"
+	"time"
 
-	"github.com/paypal/gatt"
-	"github.com/paypal/gatt/examples/option"
+	"github.com/go-ble/ble"
+	"github.com/go-ble/ble/examples/lib/dev"
 )
 
 const (
@@ -31,42 +32,58 @@ type LineBeaconGATT struct {
 }
 
 func NewLineBeacon(hwid []byte, data []byte) *LineBeaconGATT {
+
 	return &LineBeaconGATT{
 		OutFrame: CreateLineSimpleBeaconAdvertisingPDU(hwid, data),
 	}
 }
 
 // Start to Advertise your beacon, it is block API.
-func (eb *LineBeaconGATT) Advertise() {
-	a := &gatt.AdvPacket{}
-	a.AppendFlags(advFlagGeneralDiscoverable | advFlagLEOnly)
-	a.AppendField(advTypeAllUUID16, UUID16LE_FOR_LINECORP)
-	a.AppendField(advTypeServiceData16, eb.OutFrame)
-
-	fmt.Println(a.Len(), a)
-
-	d, err := gatt.NewDevice(option.DefaultServerOptions...)
+func (lb *LineBeaconGATT) Advertise() {
+	d, err := dev.NewDevice("default")
 	if err != nil {
-		log.Fatalf("Failed to open device, err: %s", err)
+		log.Fatalf("can't new device : %s", err)
+	}
+	ble.SetDefaultDevice(d)
+
+	ctx := ble.WithSigHandler(context.WithTimeout(context.Background(), 30*time.Second))
+	err = ble.AdvertiseIBeacon(ctx, UUID16LE_FOR_LINECORP, 0, 0, 90)
+	if err != nil {
+		log.Fatalf("can't advertise device : %s", err)
+	}
+	err = ble.AdvertiseIBeaconData(ctx, lb.OutFrame)
+	if err != nil {
+		log.Fatalf("can't advertise data from device : %s", err)
 	}
 
-	// Register optional handlers.
-	d.Handle(
-		gatt.CentralConnected(func(c gatt.Central) { fmt.Println("Connect: ", c.ID()) }),
-		gatt.CentralDisconnected(func(c gatt.Central) { fmt.Println("Disconnect: ", c.ID()) }),
-	)
+	// a := &gatt.AdvPacket{}
+	// a.AppendFlags(advFlagGeneralDiscoverable | advFlagLEOnly)
+	// a.AppendField(advTypeAllUUID16, UUID16LE_FOR_LINECORP)
+	// a.AppendField(advTypeServiceData16, eb.OutFrame)
 
-	// A mandatory handler for monitoring device state.
-	onStateChanged := func(d gatt.Device, s gatt.State) {
-		fmt.Printf("State: %s\n", s)
-		switch s {
-		case gatt.StatePoweredOn:
-			d.Advertise(a)
-		default:
-			log.Println(s)
-		}
-	}
+	// fmt.Println(a.Len(), a)
 
-	d.Init(onStateChanged)
-	select {}
+	// d, err := gatt.NewDevice(option.DefaultServerOptions...)
+	// if err != nil {
+	// 	log.Fatalf("Failed to open device, err: %s", err)
+	// }
+
+	// // Register optional handlers.
+	// d.Handle(
+	// 	gatt.CentralConnected(func(c gatt.Central) { fmt.Println("Connect: ", c.ID()) }),
+	// 	gatt.CentralDisconnected(func(c gatt.Central) { fmt.Println("Disconnect: ", c.ID()) }),
+	// )
+
+	// // A mandatory handler for monitoring device state.
+	// onStateChanged := func(d gatt.Device, s gatt.State) {
+	// 	fmt.Printf("State: %s\n", s)
+	// 	switch s {
+	// 	case gatt.StatePoweredOn:
+	// 		d.Advertise(a)
+	// 	default:
+	// 		log.Println(s)
+	// 	}
+	// }
+
+	// d.Init(onStateChanged)
 }
